@@ -2,6 +2,7 @@ from app import app
 from flask import render_template, request, redirect, url_for, session
 from app.parser import parse_xml_to_json
 from app.elo import update_elo_ratings, normalize_ratings
+from app.reports import generate_reports
 import json
 import os
 import random
@@ -82,3 +83,16 @@ def restart():
     # Clear session and start over
     session.clear()
     return redirect(url_for('index'))
+
+@app.route('/reports')
+def reports():
+    anime_list = session.get('anime_list', [])
+    elo_history = session.get('elo_history', [])
+
+    if not elo_history:
+        return redirect(url_for('index'))
+
+    # Generate reports and confidence intervals
+    confidence_intervals, plot_path = generate_reports(anime_list, elo_history)
+
+    return render_template('reports.html', confidence_intervals=confidence_intervals)

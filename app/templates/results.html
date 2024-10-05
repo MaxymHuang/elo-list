@@ -9,18 +9,22 @@
 </head>
 <body>
     <h1>Final Ratings</h1>
-    <table>
-        <tr>
-            <th>Anime</th>
-            <th>Rating (1-10)</th>
-        </tr>
-        {% for anime in anime_list %}
-        <tr>
-            <td>{{ anime.title }}</td>
-            <td>{{ anime.rating }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>Anime</th>
+                <th>Rating (1-10)</th>
+            </tr>
+            {% for anime in anime_list %}
+            <tr>
+                <td>{{ anime.title }}</td>
+                <td>{{ anime.rating }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    
     <a href="/restart">Start Over</a>
+    <a href="/reports">Go to reports</a>
 </body>
 </html>

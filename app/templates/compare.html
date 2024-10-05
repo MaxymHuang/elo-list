@@ -24,17 +24,19 @@
         <input type="hidden" name="loser" value="{{ anime1.id }}">
     </form>
     <h2>Current Ratings</h2>
-    <table>
-        <tr>
-            <th>Anime Title</th>
-            <th>ELO Rating</th>
-        </tr>
-        {% for anime in anime_list %}
-        <tr>
-            <td>{{ anime.title }}</td>
-            <td>{{ anime.elo }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>Anime Title</th>
+                <th>ELO Rating</th>
+            </tr>
+            {% for anime in anime_list %}
+            <tr>
+                <td>{{ anime.title }}</td>
+                <td>{{ anime.elo }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 </body>
 </html>

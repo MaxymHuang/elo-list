@@ -1,0 +1,35 @@
+<!-- app/templates/reports.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reports - ELO Convergence</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>ELO Convergence Report</h1>
+
+    <!-- Display the ELO Convergence Plot -->
+    <h2>Convergence Over Time</h2>
+    <img src="{{ url_for('static', filename='elo_convergence_plot.png') }}" alt="ELO Convergence Plot">
+
+    <!-- Display the Confidence Intervals -->
+    <h2>Confidence Intervals</h2>
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>Anime Title</th>
+                <th>Confidence Interval (ELO Score)</th>
+            </tr>
+            {% for anime, interval in confidence_intervals.items() %}
+            <tr>
+                <td>{{ anime }}</td>
+                <td>{{ interval[0] }} - {{ interval[1] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <a href="/">Back to Home</a>
+</body>
+</html>

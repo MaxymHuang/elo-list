@@ -1,5 +1,19 @@
 /* app/static/styles.css */
 
+/* Table container with scroll functionality */
+.table-container {
+    max-height: 300px; /* Set the max height for the table's container */
+    overflow-y: auto;  /* Enable vertical scroll */
+    overflow-x: auto;  /* Enable horizontal scroll if needed */
+    margin-top: 20px;  /* Optional spacing */
+}
+
+/* Optional: style the table to fill the container */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
 body {
     font-family: Arial, sans-serif;
     text-align: center;
@@ -18,15 +32,29 @@ button {
     font-size: 16px;
 }
 
-table {
-    margin: 0 auto;
-    border-collapse: collapse;
-    width: 50%;
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
 }
 
-th, td {
-    border: 1px solid #333;
-    padding: 8px;
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+/* Optional: improve scrolling experience */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
 }
 
 a {

@@ -12,13 +12,14 @@ def parse_xml_to_json(xml_file):
     anime_id = 0
 
     for anime in root.findall('anime'):
-        title = anime.find('series_title').text
-        score = float(anime.find('my_score').text)
-        anime_list.append({
-            'id': anime_id,
-            'title': title,
-            'elo': elo_modifier(score)  # Starting ELO rating
-        })
+        if anime.find('my_status').text == 'Completed':
+            title = anime.find('series_title').text
+            score = float(anime.find('my_score').text)
+            anime_list.append({
+                'id': anime_id,
+                'title': title,
+                'elo': elo_modifier(score)  # Starting ELO rating
+            })
         anime_id += 1
 
     return anime_list
