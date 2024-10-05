@@ -7,7 +7,7 @@ def parse_xml_to_json(xml_file):
     anime_id = 0
 
     for anime in root.findall('anime'):
-        title = anime.find('title').text
+        title = anime.find('series_title').text
         anime_list.append({
             'id': anime_id,
             'title': title,
