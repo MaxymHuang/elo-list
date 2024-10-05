@@ -1,0 +1,26 @@
+<!-- app/templates/compare.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Compare Anime</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Which Anime Do You Prefer?</h1>
+    <form action="/compare" method="post">
+        <button name="winner" value="{{ anime1.id }}" type="submit">
+            {{ anime1.title }}
+        </button>
+        <input type="hidden" name="loser" value="{{ anime2.id }}">
+    </form>
+    <p>OR</p>
+    <form action="/compare" method="post">
+        <button name="winner" value="{{ anime2.id }}" type="submit">
+            {{ anime2.title }}
+        </button>
+        <input type="hidden" name="loser" value="{{ anime1.id }}">
+    </form>
+</body>
+</html>

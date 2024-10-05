@@ -1,0 +1,26 @@
+<!-- app/templates/results.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Final Ratings</h1>
+    <table>
+        <tr>
+            <th>Anime</th>
+            <th>Rating (1-10)</th>
+        </tr>
+        {% for anime in anime_list %}
+        <tr>
+            <td>{{ anime.title }}</td>
+            <td>{{ anime.rating }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="/restart">Start Over</a>
+</body>
+</html>
