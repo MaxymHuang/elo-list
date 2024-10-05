@@ -7,8 +7,8 @@ def update_elo_ratings(anime_list, winner_id, loser_id, k=32):
     expected_loser = 1 / (1 + 10 ** ((winner['elo'] - loser['elo']) / 400))
 
     # Update ELO ratings
-    winner['elo'] += k * (1 - expected_winner)
-    loser['elo'] += k * (0 - expected_loser)
+    winner['elo'] += round(k * (1 - expected_winner), 3)
+    loser['elo'] += round(k * (0 - expected_loser), 3)
 
     return anime_list
 
