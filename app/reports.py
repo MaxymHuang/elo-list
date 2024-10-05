@@ -9,7 +9,7 @@ def generate_reports(anime_list, elo_history):
     for anime in anime_list:
         title = anime['title'].strip().strip('"')
         # Get the ELO scores for each comparison
-        elo_scores = [round(state.get(title, 1000), 2) for state in elo_history]
+        elo_scores = [state.get(title, 1000), 2 for state in elo_history]
         comparisons = len(elo_scores)
         mean_elo = np.mean(elo_scores)
         stand_dev = np.std(elo_scores)
@@ -23,7 +23,7 @@ def generate_reports(anime_list, elo_history):
     for anime in anime_list:
         title = anime['title'].strip().strip('"')
         # Get the ELO scores for each comparison
-        elo_scores = [round(state.get(title, 1000), 2) for state in elo_history]
+        elo_scores = [state.get(title, 1000) for state in elo_history]
         x_values = list(range(1, len(elo_scores) + 1))
 
         # Plot the ELO score evolution
