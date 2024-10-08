@@ -1,4 +1,4 @@
-def update_elo_ratings(anime_list, winner_id, loser_id, k=32):
+def update_elo_ratings(anime_list, winner_id, loser_id, k=50):
     winner = next(anime for anime in anime_list if anime['id'] == winner_id)
     loser = next(anime for anime in anime_list if anime['id'] == loser_id)
 
@@ -17,5 +17,5 @@ def normalize_ratings(anime_list):
     min_elo = min(anime['elo'] for anime in anime_list)
     max_elo = max(anime['elo'] for anime in anime_list)
     for anime in anime_list:
-        anime['rating'] = round(((anime['elo'] - min_elo) / (max_elo - min_elo)) * 9 + 1, 2)
+        anime['rating'] = round(1 + ((anime['elo'] - min_elo) * (10 -  1) / (max_elo - min_elo)))
     return anime_list
