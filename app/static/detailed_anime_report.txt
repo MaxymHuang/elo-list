@@ -1,0 +1,198 @@
+================================================================================
+COMPREHENSIVE ANIME ELO RATING ANALYSIS REPORT
+================================================================================
+Generated on: 2025-05-28 00:20:18
+
+BASIC STATISTICS
+----------------------------------------
+Total Anime Analyzed: 101
+Mean ELO Rating: 565.85
+Median ELO Rating: 549.09
+Standard Deviation: 191.30
+Rating Range: 1142.00
+Distribution Skewness: 0.060
+Distribution Kurtosis: 0.148
+
+TOP RANKINGS
+----------------------------------------
+ 1. Dungeon Meshi                  ELO: 1171.00 Rating: 10.0 Reliability: 49.1
+ 2. JoJo no Kimyou na Bouken (TV)  ELO:  908.91 Rating:  7.9 Reliability: 32.7
+ 3. Bocchi the Rock!               ELO:  899.90 Rating:  7.9 Reliability: 29.8
+ 4. Code Geass: Hangyaku no Lelouch R2 ELO:  880.91 Rating:  7.7 Reliability: 29.8
+ 5. Make Heroine ga Oosugiru!      ELO:  880.71 Rating:  7.7 Reliability: 35.6
+ 6. Mob Psycho 100 II              ELO:  863.91 Rating:  7.6 Reliability: 29.8
+ 7. Black Clover                   ELO:  848.99 Rating:  7.5 Reliability: 29.8
+ 8. Koe no Katachi                 ELO:  820.80 Rating:  7.2 Reliability: 38.4
+ 9. JoJo no Kimyou na Bouken Part 5: Ougon no Kaze ELO:  803.90 Rating:  7.1 Reliability: 32.7
+10. Kimi no Na wa.                 ELO:  803.82 Rating:  7.1 Reliability: 32.7
+
+DISTRIBUTION ANALYSIS
+----------------------------------------
+Top 10% Anime:
+  • Dungeon Meshi
+  • JoJo no Kimyou na Bouken (TV)
+  • Bocchi the Rock!
+  • Code Geass: Hangyaku no Lelouch R2
+  • Make Heroine ga Oosugiru!
+  • Mob Psycho 100 II
+  • Black Clover
+  • Koe no Katachi
+  • JoJo no Kimyou na Bouken Part 5: Ougon no Kaze
+  • Kimi no Na wa.
+  • Romantic Killer
+
+Bottom 10% Anime:
+  • Tokidoki Bosotto Russia-go de Dereru Tonari no Alya-san
+  • Blue Lock
+  • Boku no Kokoro no Yabai Yatsu
+  • Kono Subarashii Sekai ni Shukufuku wo!
+  • Kimi no Koto ga Daidaidaidaidaisuki na 100-nin no Kanojo
+  • Ore wo Suki nano wa Omae dake ka yo
+  • Jigokuraku
+  • Violet Evergarden
+  • Kimetsu no Yaiba Movie: Mugen Ressha-hen
+  • Mob Psycho 100 III
+
+Most Volatile: One Punch Man, Odd Taxi, Cowboy Bebop
+Most Stable: Dungeon Meshi, Mob Psycho 100 III, Karakai Jouzu no Takagi-san Movie
+
+RELIABILITY ANALYSIS
+----------------------------------------
+Average Reliability Score: 32.7%
+Most Reliable: Dungeon Meshi (49.1%)
+Least Reliable: Bocchi the Rock! (29.8%)
+
+High Reliability (≥80%): 0 anime
+Medium Reliability (50-79%): 0 anime
+Low Reliability (<50%): 101 anime
+
+CLUSTERING ANALYSIS
+----------------------------------------
+
+CLUSTER_0:
+  Size: 34 anime
+  Average ELO: 730.36
+  Average Uncertainty: 264.45
+  Anime in this cluster:
+    • JoJo no Kimyou na Bouken (TV)
+    • Bocchi the Rock!
+    • Code Geass: Hangyaku no Lelouch R2
+    • Mob Psycho 100 II
+    • Black Clover
+    • JoJo no Kimyou na Bouken Part 5: Ougon no Kaze
+    • Kimi no Na wa.
+    • Kimetsu no Yaiba: Yuukaku-hen
+    • Kimetsu no Yaiba
+    • Spy x Family Part 2
+    • Saiki Kusuo no Ψ-nan
+    • One Punch Man
+    • Violet Evergarden Movie
+    • Odd Taxi
+    • Ousama Ranking
+    • Yofukashi no Uta
+    • Tomo-chan wa Onnanoko!
+    • Shinseiki Evangelion
+    • Mob Psycho 100
+    • JoJo no Kimyou na Bouken Part 3: Stardust Crusaders
+    • Kono Subarashii Sekai ni Shukufuku wo! 2
+    • Fate/Zero 2nd Season
+    • Shingeki no Kyojin Season 2
+    • Domestic na Kanojo
+    • Naruto: Shippuuden
+    • Cyberpunk: Edgerunners
+    • Shingeki no Kyojin
+    • Kaguya-sama wa Kokurasetai: Ultra Romantic
+    • JoJo no Kimyou na Bouken Part 3: Stardust Crusaders - Egypt-hen
+    • Shinseiki Evangelion Movie: Air/Magokoro wo, Kimi ni
+    • Kimi wa Houkago Insomnia
+    • Karakai Jouzu no Takagi-san
+    • Toradora!
+    • Violet Evergarden Gaiden: Eien to Jidou Shuki Ningyou
+
+CLUSTER_1:
+  Size: 22 anime
+  Average ELO: 580.04
+  Average Uncertainty: 241.64
+  Anime in this cluster:
+    • Make Heroine ga Oosugiru!
+    • Koe no Katachi
+    • Romantic Killer
+    • 86
+    • JoJo no Kimyou na Bouken: Adventure
+    • Saiki Kusuo no Ψ-nan 2
+    • Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen
+    • NHK ni Youkoso!
+    • Masamune-kun no Revenge R
+    • Suzume no Tojimari
+    • Shingeki no Kyojin: The Final Season
+    • Buddy Daddies
+    • Karakai Jouzu no Takagi-san 3
+    • Komi-san wa, Comyushou desu. 2nd Season
+    • Karakai Jouzu no Takagi-san 2
+    • Ore wo Suki nano wa Omae dake ka yo: Oretachi no Game Set
+    • Karakai Jouzu no Takagi-san Movie
+    • Shingeki no Kyojin Season 3 Part 2
+    • Tengoku Daimakyou
+    • Shokugeki no Souma: Shin no Sara
+    • Mashle: Shinkakusha Kouho Senbatsu Shiken-hen
+    • Jigokuraku
+
+CLUSTER_2:
+  Size: 2 anime
+  Average ELO: 600.00
+  Average Uncertainty: 189.13
+  Anime in this cluster:
+    • Dungeon Meshi
+    • Mob Psycho 100 III
+
+CLUSTER_3:
+  Size: 43 anime
+  Average ELO: 426.92
+  Average Uncertainty: 263.90
+  Anime in this cluster:
+    • Spy x Family
+    • [Oshi no Ko]
+    • Chainsaw Man
+    • One Punch Man 2nd Season
+    • Shokugeki no Souma: San no Sara
+    • Steins;Gate 0
+    • Jujutsu Kaisen
+    • Kaguya-sama wa Kokurasetai? Tensai-tachi no Renai Zunousen
+    • Vinland Saga Season 2
+    • Shingeki no Kyojin: The Final Season Part 2
+    • Cowboy Bebop
+    • Death Note
+    • Skip to Loafer
+    • Zankyou no Terror
+    • Komi-san wa, Comyushou desu.
+    • Lycoris Recoil
+    • Fate/Zero
+    • Sousou no Frieren
+    • 86 Part 2
+    • Code Geass: Hangyaku no Lelouch
+    • JoJo no Kimyou na Bouken Part 4: Diamond wa Kudakenai
+    • Vinland Saga
+    • Monster
+    • Gokushufudou
+    • Kenpuu Denki Berserk
+    • Kaguya-sama wa Kokurasetai: First Kiss wa Owaranai
+    • Steins;Gate
+    • Kusuriya no Hitorigoto
+    • Grand Blue
+    • JoJo no Kimyou na Bouken Part 6: Stone Ocean
+    • Spy x Family Season 2
+    • Summertime Render
+    • Jujutsu Kaisen 2nd Season
+    • Sen to Chihiro no Kamikakushi
+    • Shigatsu wa Kimi no Uso
+    • Tokidoki Bosotto Russia-go de Dereru Tonari no Alya-san
+    • Blue Lock
+    • Boku no Kokoro no Yabai Yatsu
+    • Kono Subarashii Sekai ni Shukufuku wo!
+    • Kimi no Koto ga Daidaidaidaidaisuki na 100-nin no Kanojo
+    • Ore wo Suki nano wa Omae dake ka yo
+    • Violet Evergarden
+    • Kimetsu no Yaiba Movie: Mugen Ressha-hen
+
+================================================================================
+End of Report

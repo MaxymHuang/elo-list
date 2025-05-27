@@ -1,4 +1,9 @@
-Flask>=2.0.1
-lxml==4.6.3
+Flask
+lxml
 flask_session
 matplotlib
+numpy
+pandas
+seaborn
+scipy
+scikit-learn

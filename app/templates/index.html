@@ -4,14 +4,82 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Anime ELO Rating</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime ELO Rating System</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Import Your Anime List</h1>
-    <form action="/" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept=".xml" required>
-        <button type="submit">Upload</button>
-    </form>
+    <div class="container">
+        <div class="card fade-in">
+            <h1><i class="fas fa-trophy"></i> Anime ELO Rating System</h1>
+            <p style="text-align: center; color: var(--text-secondary); font-size: 1.125rem; margin-bottom: 2rem;">
+                Discover your true anime preferences using the ELO rating system
+            </p>
+            
+            <form action="/" method="post" enctype="multipart/form-data" id="uploadForm">
+                <div class="file-upload">
+                    <input type="file" name="file" accept=".xml" required id="fileInput">
+                    <label for="fileInput" class="file-upload-label">
+                        <i class="fas fa-cloud-upload-alt file-upload-icon"></i>
+                        <span><strong>Choose your anime list XML file</strong></span>
+                        <span style="font-size: 0.875rem; color: var(--text-secondary);">
+                            Export from MyAnimeList, AniList, or similar services
+                        </span>
+                    </label>
+                </div>
+                
+                <div style="text-align: center;">
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <i class="fas fa-rocket" style="margin-right: 0.5rem;"></i>
+                        Start Rating Journey
+                    </button>
+                </div>
+            </form>
+            
+            <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">
+                <h3 style="text-align: center; margin-bottom: 1.5rem;">How it works</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value"><i class="fas fa-upload"></i></div>
+                        <div class="stat-label">Upload your anime list in XML format</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value"><i class="fas fa-balance-scale"></i></div>
+                        <div class="stat-label">Compare pairs of anime you've watched</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value"><i class="fas fa-chart-line"></i></div>
+                        <div class="stat-label">Get accurate ELO-based rankings</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value"><i class="fas fa-analytics"></i></div>
+                        <div class="stat-label">View detailed statistics and insights</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const label = document.querySelector('.file-upload-label');
+            const fileName = e.target.files[0]?.name;
+            if (fileName) {
+                label.innerHTML = `
+                    <i class="fas fa-check-circle file-upload-icon" style="color: var(--success-color);"></i>
+                    <span><strong>${fileName}</strong></span>
+                    <span style="font-size: 0.875rem; color: var(--success-color);">Ready to upload!</span>
+                `;
+            }
+        });
+
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            const button = document.querySelector('.btn-primary');
+            button.classList.add('loading');
+            button.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 0.5rem;"></i>Processing...';
+        });
+    </script>
 </body>
 </html>

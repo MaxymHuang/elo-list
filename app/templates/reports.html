@@ -4,32 +4,372 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Reports - ELO Convergence</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Analytics - Anime ELO</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>ELO Convergence Report</h1>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="card fade-in">
+            <h1><i class="fas fa-chart-line"></i> Advanced Analytics Dashboard</h1>
+            <p style="text-align: center; color: var(--text-secondary); font-size: 1.125rem; margin-bottom: 2rem;">
+                Deep insights into your anime preferences and rating patterns
+            </p>
+            
+            <!-- Navigation -->
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <a href="{{ url_for('results') }}" class="btn btn-secondary">
+                    <i class="fas fa-trophy" style="margin-right: 0.5rem;"></i>
+                    Back to Rankings
+                </a>
+                {% if report_available %}
+                <a href="{{ url_for('static', filename='detailed_anime_report.txt') }}" class="btn btn-primary" style="margin-left: 1rem;" download>
+                    <i class="fas fa-file-text" style="margin-right: 0.5rem;"></i>
+                    Download Full Report
+                </a>
+                {% endif %}
+                <a href="{{ url_for('restart') }}" class="btn btn-secondary" style="margin-left: 1rem;">
+                    <i class="fas fa-redo" style="margin-right: 0.5rem;"></i>
+                    Start Over
+                </a>
+            </div>
+        </div>
 
-    <!-- Display the ELO Convergence Plot -->
-    <h2>Convergence Over Time</h2>
-    <img src="{{ url_for('static', filename='elo_convergence_plot.png') }}" alt="ELO Convergence Plot">
+        <!-- Key Statistics Overview -->
+        {% if stats_dict and stats_dict.basic %}
+        <div class="card">
+            <h2><i class="fas fa-chart-pie"></i> Statistical Overview</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">{{ stats_dict.basic.total_anime }}</div>
+                    <div class="stat-label">Total Anime Analyzed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ "%.1f"|format(stats_dict.basic.mean_elo) }}</div>
+                    <div class="stat-label">Mean ELO Rating</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ "%.1f"|format(stats_dict.basic.std_elo) }}</div>
+                    <div class="stat-label">Standard Deviation</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ "%.1f"|format(stats_dict.basic.elo_range) }}</div>
+                    <div class="stat-label">Rating Range</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ "%.2f"|format(stats_dict.basic.skewness) }}</div>
+                    <div class="stat-label">Distribution Skewness</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ "%.2f"|format(stats_dict.basic.kurtosis) }}</div>
+                    <div class="stat-label">Distribution Kurtosis</div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
 
-    <!-- Display the Confidence Intervals -->
-    <h2>Confidence Intervals</h2>
-    <div class="table-container">
-        <table>
-            <tr>
-                <th>Anime Title</th>
-                <th>Confidence Interval (ELO Score)</th>
-            </tr>
-            {% for anime, interval in confidence_intervals.items() %}
-            <tr>
-                <td>{{ anime }}</td>
-                <td>{{ interval[0] }} - {{ interval[1] }}</td>
-            </tr>
-            {% endfor %}
-        </table>
+        <!-- Visualizations -->
+        {% if plots_created %}
+        <div class="card">
+            <h2><i class="fas fa-chart-bar"></i> Data Visualizations</h2>
+            
+            <!-- Comprehensive Analysis Plot -->
+            {% if 'comprehensive_analysis.png' in plots_created %}
+            <div style="margin-bottom: 2rem;">
+                <h3>Comprehensive Rating Analysis</h3>
+                <img src="{{ url_for('static', filename='plots/comprehensive_analysis.png') }}" 
+                     style="width: 100%; max-width: 100%; height: auto; border-radius: var(--border-radius); box-shadow: var(--shadow-md);" 
+                     alt="Comprehensive Analysis">
+            </div>
+            {% endif %}
+            
+            <!-- Convergence Analysis Plot -->
+            {% if 'convergence_analysis.png' in plots_created %}
+            <div style="margin-bottom: 2rem;">
+                <h3>Rating Convergence Over Time</h3>
+                <img src="{{ url_for('static', filename='plots/convergence_analysis.png') }}" 
+                     style="width: 100%; max-width: 100%; height: auto; border-radius: var(--border-radius); box-shadow: var(--shadow-md);" 
+                     alt="Convergence Analysis">
+            </div>
+            {% endif %}
+            
+            <!-- Advanced Statistics Plot -->
+            {% if 'advanced_statistics.png' in plots_created %}
+            <div style="margin-bottom: 2rem;">
+                <h3>Advanced Statistical Analysis</h3>
+                <img src="{{ url_for('static', filename='plots/advanced_statistics.png') }}" 
+                     style="width: 100%; max-width: 100%; height: auto; border-radius: var(--border-radius); box-shadow: var(--shadow-md);" 
+                     alt="Advanced Statistics">
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Distribution Analysis -->
+        {% if stats_dict and stats_dict.distribution %}
+        <div class="card">
+            <h2><i class="fas fa-layer-group"></i> Distribution Analysis</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                <!-- Top Performers -->
+                <div>
+                    <h3 style="color: var(--success-color);"><i class="fas fa-arrow-up"></i> Top 10% Performers</h3>
+                    <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--border-radius); margin-top: 1rem;">
+                        {% for anime in stats_dict.distribution.top_10_percent %}
+                        <div style="padding: 0.5rem; margin: 0.25rem 0; background: var(--bg-card); border-radius: 6px; border-left: 4px solid var(--success-color);">
+                            {{ anime }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Bottom Performers -->
+                <div>
+                    <h3 style="color: var(--error-color);"><i class="fas fa-arrow-down"></i> Bottom 10% Performers</h3>
+                    <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--border-radius); margin-top: 1rem;">
+                        {% for anime in stats_dict.distribution.bottom_10_percent %}
+                        <div style="padding: 0.5rem; margin: 0.25rem 0; background: var(--bg-card); border-radius: 6px; border-left: 4px solid var(--error-color);">
+                            {{ anime }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem;">
+                <!-- Most Volatile -->
+                <div>
+                    <h3 style="color: var(--warning-color);"><i class="fas fa-chart-line"></i> Most Volatile Ratings</h3>
+                    <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--border-radius); margin-top: 1rem;">
+                        {% for anime in stats_dict.distribution.most_volatile %}
+                        <div style="padding: 0.5rem; margin: 0.25rem 0; background: var(--bg-card); border-radius: 6px; border-left: 4px solid var(--warning-color);">
+                            {{ anime }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Most Stable -->
+                <div>
+                    <h3 style="color: var(--primary-color);"><i class="fas fa-anchor"></i> Most Stable Ratings</h3>
+                    <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--border-radius); margin-top: 1rem;">
+                        {% for anime in stats_dict.distribution.most_stable %}
+                        <div style="padding: 0.5rem; margin: 0.25rem 0; background: var(--bg-card); border-radius: 6px; border-left: 4px solid var(--primary-color);">
+                            {{ anime }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Reliability Analysis -->
+        {% if stats_dict and stats_dict.reliability %}
+        <div class="card">
+            <h2><i class="fas fa-shield-alt"></i> Reliability Analysis</h2>
+            
+            <div class="stats-grid" style="margin-bottom: 2rem;">
+                <div class="stat-card">
+                    <div class="stat-value">{{ "%.1f"|format(stats_dict.reliability.average_reliability) }}%</div>
+                    <div class="stat-label">Average Reliability</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ stats_dict.reliability.categories.high|length }}</div>
+                    <div class="stat-label">High Reliability (≥80%)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ stats_dict.reliability.categories.medium|length }}</div>
+                    <div class="stat-label">Medium Reliability (50-79%)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ stats_dict.reliability.categories.low|length }}</div>
+                    <div class="stat-label">Low Reliability (<50%)</div>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div>
+                    <h3 style="color: var(--success-color);">Most Reliable Rating</h3>
+                    <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--border-radius); margin-top: 1rem;">
+                        <div style="font-weight: 600; font-size: 1.125rem;">{{ stats_dict.reliability.most_reliable[0] }}</div>
+                        <div style="color: var(--success-color); font-weight: 500;">{{ "%.1f"|format(stats_dict.reliability.most_reliable[1]) }}% reliability</div>
+                    </div>
+                </div>
+                <div>
+                    <h3 style="color: var(--error-color);">Least Reliable Rating</h3>
+                    <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--border-radius); margin-top: 1rem;">
+                        <div style="font-weight: 600; font-size: 1.125rem;">{{ stats_dict.reliability.least_reliable[0] }}</div>
+                        <div style="color: var(--error-color); font-weight: 500;">{{ "%.1f"|format(stats_dict.reliability.least_reliable[1]) }}% reliability</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Clustering Analysis -->
+        {% if stats_dict and stats_dict.clusters and 'error' not in stats_dict.clusters %}
+        <div class="card">
+            <h2><i class="fas fa-project-diagram"></i> Clustering Analysis</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                Machine learning analysis has identified distinct groups in your anime preferences:
+            </p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                {% for cluster_name, cluster_data in stats_dict.clusters.items() %}
+                <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--border-radius); border-top: 4px solid var(--primary-color);">
+                    <h3>{{ cluster_name.replace('_', ' ').title() }}</h3>
+                    
+                    <div style="margin: 1rem 0;">
+                        <div><strong>Size:</strong> {{ cluster_data.characteristics.size }} anime</div>
+                        <div><strong>Avg ELO:</strong> {{ "%.1f"|format(cluster_data.characteristics.avg_elo) }}</div>
+                        {% if cluster_data.characteristics.avg_rd %}
+                        <div><strong>Avg Uncertainty:</strong> {{ "%.1f"|format(cluster_data.characteristics.avg_rd) }}</div>
+                        {% endif %}
+                        {% if cluster_data.characteristics.avg_volatility %}
+                        <div><strong>Avg Volatility:</strong> {{ "%.4f"|format(cluster_data.characteristics.avg_volatility) }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div style="max-height: 200px; overflow-y: auto;">
+                        <strong>Anime in this cluster:</strong>
+                        {% for anime in cluster_data.anime %}
+                        <div style="padding: 0.25rem 0.5rem; margin: 0.25rem 0; background: var(--bg-card); border-radius: 4px; font-size: 0.875rem;">
+                            {{ anime }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Convergence Analysis -->
+        {% if stats_dict and stats_dict.convergence %}
+        <div class="card">
+            <h2><i class="fas fa-bullseye"></i> Convergence Analysis</h2>
+            
+            {% if stats_dict.convergence.system_convergence %}
+            <div style="margin-bottom: 2rem;">
+                <h3>System Convergence</h3>
+                <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--border-radius);">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="font-size: 2rem;">
+                            {% if stats_dict.convergence.system_convergence.variance_trend == 'decreasing' %}
+                                <i class="fas fa-arrow-down" style="color: var(--success-color);"></i>
+                            {% else %}
+                                <i class="fas fa-arrow-up" style="color: var(--warning-color);"></i>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <div style="font-weight: 600;">Variance Trend: {{ stats_dict.convergence.system_convergence.variance_trend.title() }}</div>
+                            <div style="color: var(--text-secondary);">
+                                {% if stats_dict.convergence.system_convergence.variance_trend == 'decreasing' %}
+                                    Your ratings are becoming more stable and converging to true preferences.
+                                {% else %}
+                                    Your ratings are still evolving. More comparisons may help stabilize rankings.
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if stats_dict.convergence.stability_scores %}
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div>
+                    <h3 style="color: var(--success-color);">Most Stable Rating</h3>
+                    <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--border-radius);">
+                        <div style="font-weight: 600; font-size: 1.125rem;">{{ stats_dict.convergence.most_stable }}</div>
+                        <div style="color: var(--text-secondary);">This anime's rating has stabilized well</div>
+                    </div>
+                </div>
+                <div>
+                    <h3 style="color: var(--warning-color);">Least Stable Rating</h3>
+                    <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--border-radius);">
+                        <div style="font-weight: 600; font-size: 1.125rem;">{{ stats_dict.convergence.least_stable }}</div>
+                        <div style="color: var(--text-secondary);">This anime's rating is still fluctuating</div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Confidence Intervals (Legacy) -->
+        {% if confidence_intervals %}
+        <div class="card">
+            <h2><i class="fas fa-chart-area"></i> Confidence Intervals</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                These intervals show the uncertainty range for each anime's rating.
+            </p>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Anime Title</th>
+                            <th>Lower Bound</th>
+                            <th>Upper Bound</th>
+                            <th>Interval Width</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for title, (lower, upper) in confidence_intervals.items() %}
+                        <tr>
+                            <td><strong>{{ title }}</strong></td>
+                            <td>{{ "%.2f"|format(lower) }}</td>
+                            <td>{{ "%.2f"|format(upper) }}</td>
+                            <td>
+                                <span style="color: 
+                                    {% if (upper - lower) < 1 %}var(--success-color)
+                                    {% elif (upper - lower) < 2 %}var(--warning-color)
+                                    {% else %}var(--error-color){% endif %};">
+                                    {{ "%.2f"|format(upper - lower) }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Insights and Recommendations -->
+        <div class="card">
+            <h2><i class="fas fa-lightbulb"></i> Insights & Recommendations</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                <div style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; padding: 1.5rem; border-radius: var(--border-radius);">
+                    <h3><i class="fas fa-brain"></i> Rating Insights</h3>
+                    <ul style="margin-top: 1rem; line-height: 1.6;">
+                        {% if stats_dict and stats_dict.basic %}
+                        <li>Your rating distribution has a skewness of {{ "%.2f"|format(stats_dict.basic.skewness) }}</li>
+                        <li>The standard deviation of {{ "%.1f"|format(stats_dict.basic.std_elo) }} indicates {{ "high" if stats_dict.basic.std_elo > 200 else "moderate" if stats_dict.basic.std_elo > 100 else "low" }} rating variance</li>
+                        {% endif %}
+                        {% if stats_dict and stats_dict.reliability %}
+                        <li>{{ "%.1f"|format(stats_dict.reliability.average_reliability) }}% average reliability suggests {{ "high" if stats_dict.reliability.average_reliability > 70 else "moderate" if stats_dict.reliability.average_reliability > 50 else "low" }} confidence in rankings</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, var(--accent-color), var(--warning-color)); color: white; padding: 1.5rem; border-radius: var(--border-radius);">
+                    <h3><i class="fas fa-chart-line"></i> Improvement Tips</h3>
+                    <ul style="margin-top: 1rem; line-height: 1.6;">
+                        <li>Continue comparing anime with high uncertainty to improve accuracy</li>
+                        <li>Focus on close matchups for better discrimination</li>
+                        <li>Consider re-evaluating anime with low reliability scores</li>
+                        <li>Your preferences show clear patterns - trust the rankings!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-    <a href="/">Back to Home</a>
 </body>
 </html>

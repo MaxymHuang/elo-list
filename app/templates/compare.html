@@ -4,39 +4,181 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Compare Anime</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Anime - ELO Rating</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <p>Comparisons remaining: {{ remaining_comparisons }} / {{ total_comparisons }}</p>
-    <h1>Which Anime Do You Prefer?</h1>
-    <form action="/compare" method="post">
-        <button name="winner" value="{{ anime1.id }}" type="submit">
-            {{ anime1.title }}
-        </button>
-        <input type="hidden" name="loser" value="{{ anime2.id }}">
-    </form>
-    <p>OR</p>
-    <form action="/compare" method="post">
-        <button name="winner" value="{{ anime2.id }}" type="submit">
-            {{ anime2.title }}
-        </button>
-        <input type="hidden" name="loser" value="{{ anime1.id }}">
-    </form>
-    <h2>Current Ratings</h2>
-    <div class="table-container">
-        <table>
-            <tr>
-                <th>Anime Title</th>
-                <th>ELO Rating</th>
-            </tr>
-            {% for anime in anime_list %}
-            <tr>
-                <td>{{ anime.title }}</td>
-                <td>{{ anime.elo }}</td>
-            </tr>
-            {% endfor %}
-        </table>
+    <div class="container">
+        <!-- Progress Section -->
+        <div class="card fade-in">
+            <h1><i class="fas fa-balance-scale"></i> Choose Your Preference</h1>
+            
+            <div class="progress-container">
+                <div class="progress-bar" style="width: {{ ((total_comparisons - remaining_comparisons) / total_comparisons * 100) if total_comparisons > 0 else 0 }}%"></div>
+            </div>
+            <div class="progress-text">
+                {{ total_comparisons - remaining_comparisons }} of {{ total_comparisons }} comparisons completed
+                ({{ remaining_comparisons }} remaining)
+            </div>
+        </div>
+
+        <!-- Comparison Section -->
+        <div class="card slide-in">
+            <div class="comparison-container">
+                <form action="/compare" method="post" style="width: 100%;">
+                    <div class="anime-card" onclick="this.closest('form').submit();">
+                        <div class="anime-title">{{ anime1.title }}</div>
+                        <div class="anime-elo">
+                            <i class="fas fa-star"></i> ELO: {{ "%.1f"|format(anime1.elo) }}
+                        </div>
+                        <div style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-secondary);">
+                            Click to choose this anime
+                        </div>
+                    </div>
+                    <input type="hidden" name="winner" value="{{ anime1.id }}">
+                    <input type="hidden" name="loser" value="{{ anime2.id }}">
+                </form>
+
+                <div class="vs-divider">
+                    <i class="fas fa-bolt"></i>
+                    <div style="font-size: 1rem; margin-top: 0.5rem;">VS</div>
+                </div>
+
+                <form action="/compare" method="post" style="width: 100%;">
+                    <div class="anime-card" onclick="this.closest('form').submit();">
+                        <div class="anime-title">{{ anime2.title }}</div>
+                        <div class="anime-elo">
+                            <i class="fas fa-star"></i> ELO: {{ "%.1f"|format(anime2.elo) }}
+                        </div>
+                        <div style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-secondary);">
+                            Click to choose this anime
+                        </div>
+                    </div>
+                    <input type="hidden" name="winner" value="{{ anime2.id }}">
+                    <input type="hidden" name="loser" value="{{ anime1.id }}">
+                </form>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="{{ url_for('results') }}" class="btn btn-secondary">
+                    <i class="fas fa-chart-bar" style="margin-right: 0.5rem;"></i>
+                    View Current Results
+                </a>
+                <a href="{{ url_for('restart') }}" class="btn btn-secondary" style="margin-left: 1rem;">
+                    <i class="fas fa-redo" style="margin-right: 0.5rem;"></i>
+                    Restart
+                </a>
+            </div>
+        </div>
+
+        <!-- Current Rankings Section -->
+        <div class="card">
+            <h2><i class="fas fa-trophy"></i> Current Rankings</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-hashtag"></i> Rank</th>
+                            <th><i class="fas fa-film"></i> Anime Title</th>
+                            <th><i class="fas fa-star"></i> ELO Rating</th>
+                            <th><i class="fas fa-chart-line"></i> Trend</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for anime in anime_list|sort(attribute='elo', reverse=true) %}
+                        <tr>
+                            <td>
+                                <span style="font-weight: 600; color: var(--primary-color);">
+                                    #{{ loop.index }}
+                                </span>
+                            </td>
+                            <td>{{ anime.title }}</td>
+                            <td>
+                                <span style="font-weight: 500;">{{ "%.1f"|format(anime.elo) }}</span>
+                            </td>
+                            <td>
+                                {% if loop.index <= 3 %}
+                                    <i class="fas fa-arrow-up" style="color: var(--success-color);"></i>
+                                {% elif loop.index <= anime_list|length // 2 %}
+                                    <i class="fas fa-minus" style="color: var(--warning-color);"></i>
+                                {% else %}
+                                    <i class="fas fa-arrow-down" style="color: var(--error-color);"></i>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="card">
+            <h3><i class="fas fa-chart-pie"></i> Quick Statistics</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">{{ anime_list|length }}</div>
+                    <div class="stat-label">Total Anime</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ total_comparisons - remaining_comparisons }}</div>
+                    <div class="stat-label">Comparisons Made</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ "%.1f"|format(anime_list|map(attribute='elo')|max) }}</div>
+                    <div class="stat-label">Highest ELO</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ "%.1f"|format(anime_list|map(attribute='elo')|min) }}</div>
+                    <div class="stat-label">Lowest ELO</div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        // Add click feedback
+        document.querySelectorAll('.anime-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === '1' || e.key === 'ArrowLeft') {
+                document.querySelector('form:first-of-type .anime-card').click();
+            } else if (e.key === '2' || e.key === 'ArrowRight') {
+                document.querySelector('form:last-of-type .anime-card').click();
+            }
+        });
+
+        // Show keyboard shortcuts hint
+        setTimeout(() => {
+            const hint = document.createElement('div');
+            hint.innerHTML = `
+                <div style="position: fixed; bottom: 20px; right: 20px; background: var(--bg-card); 
+                           padding: 1rem; border-radius: var(--border-radius); box-shadow: var(--shadow-md); 
+                           font-size: 0.875rem; color: var(--text-secondary); max-width: 200px;">
+                    <strong>Keyboard Shortcuts:</strong><br>
+                    Press <kbd>1</kbd> or <kbd>←</kbd> for left anime<br>
+                    Press <kbd>2</kbd> or <kbd>→</kbd> for right anime
+                </div>
+            `;
+            document.body.appendChild(hint);
+            
+            setTimeout(() => {
+                hint.style.opacity = '0';
+                hint.style.transition = 'opacity 0.5s';
+                setTimeout(() => hint.remove(), 500);
+            }, 5000);
+        }, 2000);
+    </script>
 </body>
 </html>

@@ -4,28 +4,303 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Results</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Rankings - Anime ELO</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Final Ratings</h1>
-    <div class="table-container">
-        <table>
-            <tr>
-                <th>Anime</th>
-                <th>Rating (1-10)</th>
-            </tr>
-            {% for anime in anime_list %}
-            <tr>
-                <td>{{ anime.title }}</td>
-                <td>{{ anime.rating }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-    
-    <a href="/restart">Start Over        </a>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="card fade-in">
+            <h1><i class="fas fa-trophy"></i> Final Anime Rankings</h1>
+            <p style="text-align: center; color: var(--text-secondary); font-size: 1.125rem; margin-bottom: 2rem;">
+                Your personalized anime rankings based on advanced ELO analysis
+            </p>
+            
+            <!-- Quick Actions -->
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <a href="{{ url_for('reports') }}" class="btn btn-primary">
+                    <i class="fas fa-chart-line" style="margin-right: 0.5rem;"></i>
+                    View Detailed Analytics
+                </a>
+                <a href="{{ url_for('export_csv') }}" class="btn btn-secondary" style="margin-left: 1rem;">
+                    <i class="fas fa-download" style="margin-right: 0.5rem;"></i>
+                    Export CSV
+                </a>
+                <a href="{{ url_for('restart') }}" class="btn btn-secondary" style="margin-left: 1rem;">
+                    <i class="fas fa-redo" style="margin-right: 0.5rem;"></i>
+                    Start Over
+                </a>
+            </div>
+        </div>
 
-    <a href="/reports">Go to reports</a>
+        <!-- Summary Statistics -->
+        <div class="card">
+            <h2><i class="fas fa-chart-pie"></i> Summary Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">{{ anime_list|length }}</div>
+                    <div class="stat-label">Total Anime Ranked</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ "%.1f"|format(anime_list|map(attribute='elo')|max) }}</div>
+                    <div class="stat-label">Highest ELO</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ "%.1f"|format(anime_list|map(attribute='elo')|min) }}</div>
+                    <div class="stat-label">Lowest ELO</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ "%.1f"|format(anime_list|map(attribute='reliability')|sum / anime_list|length) }}%</div>
+                    <div class="stat-label">Average Reliability</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top 3 Podium -->
+        <div class="card">
+            <h2><i class="fas fa-medal"></i> Top 3 Champions</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                {% for anime in anime_list[:3] %}
+                <div class="anime-card" style="position: relative; background: linear-gradient(135deg, 
+                    {% if loop.index == 1 %}#ffd700, #ffed4e{% elif loop.index == 2 %}#c0c0c0, #e8e8e8{% else %}#cd7f32, #daa520{% endif %});">
+                    <div style="position: absolute; top: -10px; right: -10px; background: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: var(--shadow-md);">
+                        {% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% else %}🥉{% endif %}
+                    </div>
+                    <div class="anime-title" style="color: #333; font-size: 1.5rem; margin-bottom: 1rem;">{{ anime.title }}</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; color: #333;">
+                        <div>
+                            <strong>ELO Rating</strong><br>
+                            {{ "%.1f"|format(anime.elo) }}
+                        </div>
+                        <div>
+                            <strong>Normalized</strong><br>
+                            {{ "%.1f"|format(anime.rating) }}/10
+                        </div>
+                        <div>
+                            <strong>Reliability</strong><br>
+                            {{ "%.1f"|format(anime.reliability) }}%
+                        </div>
+                        <div>
+                            <strong>Percentile</strong><br>
+                            {{ "%.1f"|format(anime.percentile) }}th
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Complete Rankings Table -->
+        <div class="card">
+            <h2><i class="fas fa-list-ol"></i> Complete Rankings</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-hashtag"></i> Rank</th>
+                            <th><i class="fas fa-film"></i> Anime Title</th>
+                            <th><i class="fas fa-star"></i> ELO</th>
+                            <th><i class="fas fa-chart-bar"></i> Rating</th>
+                            <th><i class="fas fa-shield-alt"></i> Reliability</th>
+                            <th><i class="fas fa-percentage"></i> Percentile</th>
+                            <th><i class="fas fa-gamepad"></i> Games</th>
+                            <th><i class="fas fa-fire"></i> Streak</th>
+                            <th><i class="fas fa-info-circle"></i> Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for anime in anime_list %}
+                        <tr>
+                            <td>
+                                <span style="font-weight: 600; color: 
+                                    {% if loop.index <= 3 %}var(--warning-color)
+                                    {% elif loop.index <= 10 %}var(--primary-color)
+                                    {% else %}var(--text-secondary){% endif %};">
+                                    #{{ loop.index }}
+                                    {% if loop.index <= 3 %}
+                                        {% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% else %}🥉{% endif %}
+                                    {% endif %}
+                                </span>
+                            </td>
+                            <td>
+                                <strong>{{ anime.title }}</strong>
+                                {% if anime.win_streak >= 3 %}
+                                    <span style="color: var(--success-color); margin-left: 0.5rem;">🔥</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span style="font-weight: 500;">{{ "%.1f"|format(anime.elo) }}</span>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">
+                                    ±{{ "%.1f"|format(anime.get('rd', 100)) }}
+                                </div>
+                            </td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span style="font-weight: 500;">{{ "%.1f"|format(anime.rating) }}/10</span>
+                                    <div style="width: 50px; height: 8px; background: var(--bg-secondary); border-radius: 4px; overflow: hidden;">
+                                        <div style="width: {{ (anime.rating / 10 * 100)|int }}%; height: 100%; background: linear-gradient(90deg, var(--error-color), var(--warning-color), var(--success-color));"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span style="color: 
+                                    {% if anime.reliability >= 80 %}var(--success-color)
+                                    {% elif anime.reliability >= 50 %}var(--warning-color)
+                                    {% else %}var(--error-color){% endif %};">
+                                    {{ "%.1f"|format(anime.reliability) }}%
+                                </span>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">
+                                    {% if anime.reliability >= 80 %}High
+                                    {% elif anime.reliability >= 50 %}Medium
+                                    {% else %}Low{% endif %}
+                                </div>
+                            </td>
+                            <td>
+                                <span style="font-weight: 500;">{{ "%.1f"|format(anime.percentile) }}th</span>
+                            </td>
+                            <td>
+                                <span>{{ anime.get('games_played', 0) }}</span>
+                            </td>
+                            <td>
+                                {% if anime.get('win_streak', 0) > 0 %}
+                                    <span style="color: var(--success-color); font-weight: 500;">
+                                        {{ anime.win_streak }}
+                                    </span>
+                                {% else %}
+                                    <span style="color: var(--text-secondary);">0</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;" 
+                                        onclick="showAnimeDetails({{ anime.id }})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Rating Distribution -->
+        <div class="card">
+            <h2><i class="fas fa-chart-histogram"></i> Rating Distribution</h2>
+            <div style="display: grid; grid-template-columns: repeat(10, 1fr); gap: 0.5rem; margin-top: 1rem;">
+                {% for i in range(1, 11) %}
+                {% set count = anime_list|selectattr('rating', 'ge', i-0.5)|selectattr('rating', 'lt', i+0.5)|list|length %}
+                <div style="text-align: center;">
+                    <div style="height: {{ (count / anime_list|length * 100)|int + 20 }}px; background: linear-gradient(to top, var(--primary-color), var(--accent-color)); border-radius: 4px; margin-bottom: 0.5rem; display: flex; align-items: end; justify-content: center; color: white; font-weight: 500; font-size: 0.75rem;">
+                        {% if count > 0 %}{{ count }}{% endif %}
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-secondary);">{{ i }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Anime Details Modal -->
+    <div id="animeModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: var(--bg-card); border-radius: var(--border-radius); padding: 2rem; max-width: 600px; width: 90%; max-height: 80%; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3 id="modalTitle">Anime Details</h3>
+                <button onclick="closeModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="modalContent">
+                Loading...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showAnimeDetails(animeId) {
+            const modal = document.getElementById('animeModal');
+            const content = document.getElementById('modalContent');
+            const title = document.getElementById('modalTitle');
+            
+            modal.style.display = 'flex';
+            content.innerHTML = 'Loading...';
+            
+            fetch(`/api/anime/${animeId}/details`)
+                .then(response => response.json())
+                .then(data => {
+                    title.textContent = data.title;
+                    content.innerHTML = `
+                        <div class="stats-grid" style="margin-bottom: 1.5rem;">
+                            <div class="stat-card">
+                                <div class="stat-value">${data.elo.toFixed(1)}</div>
+                                <div class="stat-label">ELO Rating</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${data.rating.toFixed(1)}/10</div>
+                                <div class="stat-label">Normalized Rating</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${data.reliability.toFixed(1)}%</div>
+                                <div class="stat-label">Reliability</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${data.percentile.toFixed(1)}th</div>
+                                <div class="stat-label">Percentile</div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div>
+                                <strong>Games Played:</strong> ${data.games_played}<br>
+                                <strong>Win Streak:</strong> ${data.win_streak}<br>
+                                <strong>Volatility:</strong> ${data.volatility.toFixed(4)}<br>
+                                <strong>Rating Deviation:</strong> ${data.rd.toFixed(1)}
+                            </div>
+                            <div>
+                                <strong>Confidence Interval:</strong><br>
+                                ${data.confidence_interval[0].toFixed(1)} - ${data.confidence_interval[1].toFixed(1)}<br>
+                                <strong>Strength of Schedule:</strong> ${data.strength_of_schedule.toFixed(1)}th percentile
+                            </div>
+                        </div>
+                        
+                        ${data.performance_history.length > 0 ? `
+                            <div>
+                                <strong>Recent Performance:</strong>
+                                <div style="margin-top: 0.5rem;">
+                                    ${data.performance_history.slice(-5).map(game => 
+                                        `<span style="display: inline-block; margin: 0.25rem; padding: 0.25rem 0.5rem; border-radius: 4px; background: ${game.result ? 'var(--success-color)' : 'var(--error-color)'}; color: white; font-size: 0.75rem;">
+                                            ${game.result ? 'W' : 'L'} vs ${game.opponent_rating.toFixed(0)}
+                                        </span>`
+                                    ).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    `;
+                })
+                .catch(error => {
+                    content.innerHTML = 'Error loading details.';
+                });
+        }
+        
+        function closeModal() {
+            document.getElementById('animeModal').style.display = 'none';
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('animeModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
 </body>
 </html>
